@@ -1,0 +1,10 @@
+# Netlify Configuration
+[build]
+  # Папка, которая будет опубликована
+  publish = "src"
+
+# Редиректы для SPA (опционально)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

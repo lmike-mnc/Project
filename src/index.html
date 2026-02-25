@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Трекер привычек и дашборд продуктивности с AI-рекомендациями">
+    <title>Трекер Привычек | Productivity Dashboard</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/components.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <button class="menu-btn" id="menuBtn">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="logo">
+                    <div class="logo-icon">ПД</div>
+                    <div class="logo-text">
+                        <span class="logo-title">Productivity</span>
+                        <span class="logo-subtitle">Dashboard</span>
+                    </div>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="icon-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                </button>
+                <div class="user-profile">
+                    <div class="user-avatar">👤</div>
+                    <div class="user-info">
+                        <span class="user-name">Пользователь</span>
+                        <span class="user-role">Личный кабинет</span>
+                    </div>
+                </div>
+                <div class="search-box">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <span>Поиск...</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Row -->
+            <section class="top-row">
+                <!-- Date Widget -->
+                <div class="date-widget card">
+                    <div class="date-circle">
+                        <span class="date-day" id="currentDay">23</span>
+                    </div>
+                    <div class="date-info">
+                        <span class="date-weekday" id="currentWeekday">Чт,</span>
+                        <span class="date-month" id="currentMonth">Января</span>
+                    </div>
+                    <button class="primary-btn" id="showTasksBtn">
+                        Мои задачи
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </button>
+                    <button class="icon-btn calendar-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- AI Assistant Widget -->
+                <div class="ai-widget card">
+                    <div class="ai-content">
+                        <h2>Привет! Нужна помощь? 👋</h2>
+                        <p id="aiGreeting">Спроси меня о чём угодно!</p>
+                    </div>
+                    <button class="voice-btn" id="getAiAdvice">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                            <line x1="12" y1="19" x2="12" y2="23"></line>
+                            <line x1="8" y1="23" x2="16" y2="23"></line>
+                        </svg>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Widgets Grid -->
+            <section class="widgets-grid">
+                <!-- Habits Widget -->
+                <div class="habits-widget card">
+                    <div class="card-header">
+                        <h3>🎯 Привычки</h3>
+                        <div class="card-actions">
+                            <select id="habitFilter" class="filter-select">
+                                <option value="all">Все</option>
+                                <option value="daily">Ежедневные</option>
+                                <option value="weekly">Еженедельные</option>
+                            </select>
+                            <button class="icon-btn add-btn" id="addHabitBtn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="habits-list" id="habitsList">
+                        <!-- Habits will be rendered here -->
+                    </div>
+                    <div class="habit-stats">
+                        <div class="stat-item">
+                            <span class="stat-value" id="habitsCompleted">0</span>
+                            <span class="stat-label">выполнено</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="habitsTotal">0</span>
+                            <span class="stat-label">всего</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tasks Widget -->
+                <div class="tasks-widget card">
+                    <div class="card-header">
+                        <h3>✅ Задачи</h3>
+                        <div class="card-actions">
+                            <select id="taskFilter" class="filter-select">
+                                <option value="all">Все</option>
+                                <option value="high">Высокий</option>
+                                <option value="low">Низкий</option>
+                            </select>
+                            <button class="icon-btn add-btn" id="addTaskBtn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="tasks-list" id="tasksList">
+                        <!-- Tasks will be rendered here -->
+                    </div>
+                </div>
+
+                <!-- Progress Circle Widget -->
+                <div class="progress-widget card">
+                    <div class="card-header">
+                        <h3>📊 Прогресс</h3>
+                        <span class="card-period">Сегодня</span>
+                    </div>
+                    <div class="progress-circle-container">
+                        <div class="progress-circle" id="progressCircle">
+                            <svg viewBox="0 0 100 100">
+                                <circle class="progress-bg" cx="50" cy="50" r="45"></circle>
+                                <circle class="progress-bar" cx="50" cy="50" r="45" id="progressBar"></circle>
+                            </svg>
+                            <div class="progress-text">
+                                <span class="progress-value" id="progressValue">0%</span>
+                                <span class="progress-label">выполнено</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Streak Widget -->
+                <div class="streak-widget card">
+                    <div class="streak-icon">🔥</div>
+                    <div class="streak-info">
+                        <span class="streak-value" id="streakDays">0 Дней</span>
+                        <span class="streak-label">Текущая серия</span>
+                    </div>
+                    <div class="streak-chart" id="streakChart">
+                        <!-- Mini chart will be here -->
+                    </div>
+                </div>
+
+                <!-- Time Widget -->
+                <div class="time-widget card">
+                    <div class="time-display">
+                        <span class="time-value" id="currentTime">00:00</span>
+                        <span class="time-seconds" id="currentSeconds">:00</span>
+                    </div>
+                    <div class="time-label">Текущее время</div>
+                </div>
+
+                <!-- Quote Widget -->
+                <div class="quote-widget card">
+                    <div class="quote-icon">💬</div>
+                    <div class="quote-content">
+                        <p class="quote-text" id="quoteText">Загрузка цитаты...</p>
+                        <span class="quote-author" id="quoteAuthor"></span>
+                    </div>
+                    <button class="icon-btn refresh-btn" id="refreshQuote">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="23 4 23 10 17 10"></polyline>
+                            <polyline points="1 20 1 14 7 14"></polyline>
+                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                        </svg>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Bottom Row - Charts -->
+            <section class="charts-row">
+                <!-- Monthly Progress Chart -->
+                <div class="chart-widget card">
+                    <div class="card-header">
+                        <h3>📈 Прогресс за месяц</h3>
+                        <select id="chartPeriod" class="filter-select">
+                            <option value="30">30 дней</option>
+                            <option value="14">14 дней</option>
+                            <option value="7">7 дней</option>
+                        </select>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="progressChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Categories Chart -->
+                <div class="categories-widget card">
+                    <div class="card-header">
+                        <h3>🏷️ Категории</h3>
+                    </div>
+                    <div class="chart-container doughnut-container">
+                        <canvas id="categoriesChart"></canvas>
+                    </div>
+                    <div class="categories-legend" id="categoriesLegend">
+                        <!-- Legend items will be rendered here -->
+                    </div>
+                </div>
+
+                <!-- AI Recommendations Widget -->
+                <div class="ai-recommendations-widget card">
+                    <div class="card-header">
+                        <h3>🤖 AI Рекомендации</h3>
+                        <button class="secondary-btn" id="generateRecommendations">
+                            Обновить
+                        </button>
+                    </div>
+                    <div class="ai-content-area" id="aiRecommendations">
+                        <div class="ai-placeholder">
+                            <p>Нажмите "Обновить" для получения персональных рекомендаций на основе ваших привычек и
+                                задач</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Add Habit Modal -->
+    <div class="modal" id="habitModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="habitModalTitle">Добавить привычку</h3>
+                <button class="close-btn" id="closeHabitModal">&times;</button>
+            </div>
+            <form id="habitForm">
+                <input type="hidden" id="habitId">
+                <div class="form-group">
+                    <label for="habitName">Название</label>
+                    <input type="text" id="habitName" placeholder="Например: Утренняя зарядка" required>
+                </div>
+                <div class="form-group">
+                    <label for="habitCategory">Категория</label>
+                    <select id="habitCategory">
+                        <option value="health">💪 Здоровье</option>
+                        <option value="work">💼 Работа</option>
+                        <option value="study">📚 Учёба</option>
+                        <option value="personal">🌟 Личное</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="habitType">Тип</label>
+                    <select id="habitType">
+                        <option value="daily">Ежедневная</option>
+                        <option value="weekly">Еженедельная</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="secondary-btn" id="cancelHabit">Отмена</button>
+                    <button type="submit" class="primary-btn">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Task Modal -->
+    <div class="modal" id="taskModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="taskModalTitle">Добавить задачу</h3>
+                <button class="close-btn" id="closeTaskModal">&times;</button>
+            </div>
+            <form id="taskForm">
+                <input type="hidden" id="taskId">
+                <div class="form-group">
+                    <label for="taskTitle">Название</label>
+                    <input type="text" id="taskTitle" placeholder="Что нужно сделать?" required>
+                </div>
+                <div class="form-group">
+                    <label for="taskDescription">Описание</label>
+                    <textarea id="taskDescription" placeholder="Подробности задачи..."></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taskPriority">Приоритет</label>
+                        <select id="taskPriority">
+                            <option value="high">🔴 Высокий</option>
+                            <option value="low">🟢 Низкий</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskDeadline">Дедлайн</label>
+                        <input type="date" id="taskDeadline">
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="secondary-btn" id="cancelTask">Отмена</button>
+                    <button type="submit" class="primary-btn">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/utils/helpers.js"></script>
+    <script src="js/utils/storage.js"></script>
+    <script src="js/modules/timeWidget.js"></script>
+    <script src="js/modules/quotes.js"></script>
+    <script src="js/modules/habits.js"></script>
+    <script src="js/modules/tasks.js"></script>
+    <script src="js/modules/charts.js"></script>
+    <script src="js/modules/context7.js"></script>
+    <script src="js/modules/aiRecommendations.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
